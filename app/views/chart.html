@@ -1,0 +1,18 @@
+<div class="row">
+
+  <div class="col-md-2">
+    <!-- <label class="sidebar-list" ng-repeat="comp in competencies| orderBy:identity:true"> -->
+    <label class="sidebar-list" ng-repeat="comp in competencies">
+      <input type="checkbox" checklist-model="currentComps" ng-click="updateChart($event, comp)" checklist-value="comp"> {{comp}}
+    </label>
+  </div>
+
+  <div class="col-md-10">
+    <div
+      data-ac-chart="'line'"
+      data-ac-data="data"
+      data-ac-config="config"
+      class="chart">
+    </div>
+  </div>
+</div>
