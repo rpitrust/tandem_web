@@ -1,17 +1,36 @@
 'use strict';
 
 angular.module('TandemWeb')
-  .controller('NoiseSaCtrl', ['$scope', '$http', '$location', 'version', 'endpoints',
-    function($scope, $http, $location, version, endpoints) {
-
-      $scope.roles = [0.2, 0.4, 0.6, 0.8]
-
-      $scope.user = {
-        roles: [0.2, 0.8]
-    }
+  .controller('NoiseSaCtrl', ['$scope', '$http', '$location', 'version',
+                              'endpoints', 'cumulativeLineChart',
+    function($scope, $http, $location, version, endpoints, cumulativeLineChart) {
 
       $scope.$path = $location.path.bind($location);
       $scope.version = version;
+
+      $scope.selectedIcons = ['1'];
+      $scope.icons = [ {value: '1', label: '1'},
+                       {value: '3', label: '3'} ];
+
+      $scope.$watch('selectedIcons', function() {
+        if ($scope.selectedIcons.length == 0) {
+          $scope.selectedIcons = ['1'];
+        }
+        getPlotData($scope.plotTypes[$scope.factorTabs.activeTab])
+      })
+
+
+      $scope.plotTypes = ['competence', 'willingness', 'spammer', 'selfish']
+
+      $scope.factorTabs = [
+        {"title": "Competence"},
+        {"title": "Willingness"},
+        {"title": "Spammer"},
+        {"title": "Selfish"}
+      ]
+
+      $scope.factorTabs.activeTab = 0;
+
 
       $scope.config = {
         title: 'Noise vs SA',
@@ -27,12 +46,10 @@ angular.module('TandemWeb')
         // }
       };
 
-      $scope.result = {};
-
       var getNoiseLevels = function() {
         var noiseArray = [];
-        for(var competency in $scope.result) {
-          for(var noiseLevel in $scope.result[competency]) {
+        for(var factor in $scope.result) {
+          for(var noiseLevel in $scope.result[factor]['agf'][$scope.selectedIcons[0]]) {
             noiseArray.push(noiseLevel);
           }
           break;
@@ -40,98 +57,49 @@ angular.module('TandemWeb')
         return noiseArray.sort();
       };
 
-      $scope.updateChart = function(event, comp) {
-        if(typeof event != 'undefined') {
-          if(event.target.checked == true ) {
-            if($scope.currentComps.indexOf(comp) == -1) {
-              $scope.currentComps.push(comp);
+      $scope.$watch('factorTabs.activeTab', function() {
+        getPlotData($scope.plotTypes[$scope.factorTabs.activeTab]);
+      });
+
+      var getAllFactors = function() {
+        var factors_arr = Object.keys($scope.result).sort();
+        var final_arr = (function() {
+          var arr = [];
+          for (var index in factors_arr) {
+            var factor = factors_arr[index];
+            for (var agf in $scope.result[factor]['agf']) {
+              arr.push([factor, agf]);
             }
-            $scope.selectedComps = angular.copy($scope.currentComps);
-          } else {
-            $scope.selectedComps = angular.copy(_.difference($scope.currentComps, [comp]));
           }
-        } else {
-          $scope.selectedComps = angular.copy($scope.currentComps);
-        }
+          return arr;
+        }());
+        return final_arr;
+      };
 
-        $scope.data = {
-          series: $scope.selectedComps,
-          data: (function() {
-            var plot_data = [];
-            $scope.noiseLevels = getNoiseLevels();
-            for(var i=0; i < $scope.noiseLevels.length; i++) {
-              var datum = {
-                x: $scope.noiseLevels[i],
-                y: function() {
-                  var arr = [];
-                  for(var j=0; j < $scope.selectedComps.length; j++) {
-                    arr.push($scope.result[$scope.selectedComps[j]][$scope.noiseLevels[i]]);
-                  }
-                  return arr
-                }()
-              }
-              plot_data.push(datum);
-            }
-            return plot_data
-          })()
-        }
+      var getPlotData = function(plot_type) {
+        endpoints.getNoiseVsSa(plot_type, $scope.selectedIcons.join(','))
+        .success(function(data, status, headers, config) {
+          $scope.result = data.results[0],
+          $scope.factors = getAllFactors();
+          $scope.currentFactors = [];
+          $scope.updateChart();
+        })
+      };
 
+      $scope.updateChart = function(event, factor) {
+        $scope.selectedFactors = cumulativeLineChart.updateSelectedFactors(
+                                   event, factor,  $scope.currentFactors);
+        // console.log($scope.selectedFactors);
+
+        $scope.data = cumulativeLineChart.getChartData(
+                        $scope.result, $scope.selectedFactors, getNoiseLevels()
+                      );
       }
 
       var init = function() {
-
-        endpoints.getNoiseVsSa()
-        .success(function(data, status, headers, config) {
-          $scope.result = data.results[0],
-          $scope.competencies = Object.keys($scope.result).sort();
-          $scope.currentComps = Object.keys($scope.result).sort();
-          $scope.updateChart();
-        })
+        getPlotData('competence');
       }
       init();
 
-
     }
   ]);
-
-
-
-
-
-
-
-
-
-          // }(),
-          // $scope.data = {
-          //   series: Object.keys($scope.result),
-          //   data: [
-          //     {
-          //       x: "50",
-          //       y: function() {
-          //            var arr = [];
-          //            for(var comp in $scope.result) arr.push($scope.result[comp]['50']);
-          //             // console.log($scope.result['0.8']);
-          //            return arr
-          //         }()
-          //     },
-          //     {
-          //       x: "500",
-          //       y: function() {
-          //            var arr = [];
-          //            for(var comp in $scope.result) arr.push($scope.result[comp]['500']);
-          //             // console.log($scope.result['0.8']);
-          //            return arr
-          //         }()
-          //     },
-          //     {
-          //       x: "5000",
-          //       y: function() {
-          //            var arr = [];
-          //            for(var comp in $scope.result) arr.push($scope.result[comp]['5000']);
-          //             // console.log($scope.result['0.8']);
-          //            return arr
-          //         }()
-          //     }
-          //   ]
-          // };

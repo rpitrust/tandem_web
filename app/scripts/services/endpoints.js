@@ -3,8 +3,10 @@
 angular.module('TandemWeb')
   .factory('endpoints', function ($http) {
     return {
-      getNoiseVsSa: function() {
-        return $http.get('http://localhost:8000/spatial_noise_sa')}
+      getNoiseVsSa: function(type, agf) {
+        return $http.get('http://localhost:8000/spatial_noise_sa', {
+          params: { plot_type: type, agf: agf }
+        })}
       };
   });
 

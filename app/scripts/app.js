@@ -1,6 +1,15 @@
 'use strict';
 
-var app = angular.module('TandemWeb', ['ngAnimate', 'ngCookies', 'ngRoute', 'mgcrea.ngStrap', 'restangular', 'angularCharts', 'checklist-model'])
+var app = angular.module('TandemWeb', [
+  'ngAnimate',
+  'ngSanitize',
+  'ngCookies',
+  'ngRoute',
+  'mgcrea.ngStrap',
+  'restangular',
+  'angularCharts',
+  'checklist-model'
+  ])
 
   .constant('version', 'v0.1.0')
 
@@ -17,7 +26,7 @@ var app = angular.module('TandemWeb', ['ngAnimate', 'ngCookies', 'ngRoute', 'mgc
         controller: 'LoginCtrl'
       })
       .when('/chart', {
-        templateUrl: 'views/chart.html',
+        templateUrl: 'views/noise_sa_main.html',
         controller: 'NoiseSaCtrl'
       })
       .when('/logout', {

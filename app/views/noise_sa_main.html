@@ -1,0 +1,30 @@
+<div class="row">
+  <div ng-model="factorTabs.activeTab" bs-tabs="factorTabs"></div>
+</div>
+<div class="row">
+  <div class="col-md-2">
+    <!-- <label class="sidebar-list" ng-repeat="comp in competencies| orderBy:identity:true"> -->
+    <div class="row" style="float:left;">
+      <label>AGF:</label>
+      <button type="button" class="btn btn-default" ng-model="selectedIcons" data-html="1" data-multiple="1" data-animation="am-flip-x" ng-options="icon.value as icon.label for icon in icons"  data-placeholder="Choose" bs-select>
+        Action <span class="caret"></span>
+      </button>
+    </div>
+    <br/>
+    <br/>
+    <div class="row">
+      <label class="sidebar-list" ng-repeat="factor in factors">
+        <input type="checkbox" checklist-model="currentFactors" ng-click="updateChart($event, factor)" checklist-value="factor"> {{testTabs[testTabs.activeTab].title}} {{factor[0]}} | AGF {{factor[1]}}
+      </label>
+    </div>
+  </div>
+  <div class="col-md-10">
+    <div
+        data-ac-chart="'line'"
+        data-ac-data="data"
+        data-ac-config="config"
+        class="chart">
+    </div>
+  </div>
+
+</div>
