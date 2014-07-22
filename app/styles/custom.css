@@ -1,0 +1,54 @@
+.nv-indexLine,
+.nv-legend,
+/*.nv-controlsWrap,*/
+.tab-content {
+  display:none;
+}
+
+input[type="checkbox"]
+{
+    display:none;
+}
+
+.nav-tabs > li, .nav-pills > li {
+  cursor: pointer;
+  float:none;
+  display:inline-block;
+  *display:inline; /* ie7 fix */
+}
+
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+.y-axis-select {
+  width: 120px;
+}
+
+label.active {
+  font-weight: bold;
+}
+
+.nvd3 .nv-groups path.nv-line {
+  fill: none;
+  stroke-width: 3px;
+}
+
+.x-axis-default {
+  padding-top: 20px;
+  padding-right: 5px;
+  padding-left: 32%;
+  display:inline;
+  float:left;
+}
+
+.y-axis-select {
+  padding-top: 15px;
+  padding-left: 5px;
+  display:inline;
+  float:left;
+}
+
+label.sidebar-list {
+  cursor: pointer;
+}

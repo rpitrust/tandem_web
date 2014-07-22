@@ -5,10 +5,12 @@ var app = angular.module('TandemWeb', [
   'ngSanitize',
   'ngCookies',
   'ngRoute',
-  'mgcrea.ngStrap',
   'restangular',
-  'angularCharts',
-  'checklist-model'
+  'nvd3ChartDirectives',
+  // 'angularCharts',
+  'checklist-model',
+  'ui.bootstrap',
+  'ui.select'
   ])
 
   .constant('version', 'v0.1.0')
@@ -26,7 +28,8 @@ var app = angular.module('TandemWeb', [
         controller: 'LoginCtrl'
       })
       .when('/chart', {
-        templateUrl: 'views/noise_sa_main.html',
+        // templateUrl: 'views/noise_sa_main.html',
+        templateUrl: 'views/nvd3.html',
         controller: 'NoiseSaCtrl'
       })
       .when('/logout', {
@@ -38,6 +41,14 @@ var app = angular.module('TandemWeb', [
       })
       .when('/contact', {
         templateUrl: 'views/contact.html'
+      })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
       })
       .otherwise({
         redirectTo: '/'

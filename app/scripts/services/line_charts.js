@@ -7,10 +7,9 @@ angular.module('TandemWeb')
           var selectedFactors = [];
           // if this function has been triggered by a click event to select a
           // factor in the sidebar
-          // console.log(factor[1]);
-          if(typeof event != 'undefined') {
+          if(typeof event !== 'undefined') {
             // when a factor has been checked...
-            if(event.target.checked == true ) {
+            if(event.target.checked === true ) {
               // if the factor isn't already present in the array of
               // current factors, add it
               for (var index in currentFactors) {
@@ -19,57 +18,50 @@ angular.module('TandemWeb')
                   break;
                 }
               }
-              // console.log(present == undefined);
               if(present == undefined) {
                 currentFactors.push(factor);
               }
               selectedFactors = angular.copy(currentFactors);
             // when a factor has been unchecked...
             } else {
-              // Update the array of selected factors by removing the unchecked
+              // update the array of selected factors by removing the unchecked
               // factor
               selectedFactors = angular.copy(currentFactors);
-              for (index in selectedFactors) {
-                if (_.isEqual(factor, selectedFactors[index])) {
-                  selectedFactors.splice(index, 1);
+              for (var i in selectedFactors) {
+                if (_.isEqual(factor, selectedFactors[i])) {
+                  selectedFactors.splice(i, 1);
                 }
               }
             }
           // none of the factors are seleted by default on a fresh page load
           } else {
-            selectedFactors = [];
+            selectedFactors = currentFactors;
           }
           return selectedFactors;
         },
 
-        getChartData: function(result, selectedFactors, noiseLevels) {
+        getChartData: function(result, selectedFactors) {
           return {
-            // series: selectedFactors,
-            series: (function() {
-              var arr = [];
-              for (var index in selectedFactors) {
-                arr.push(['C ' + selectedFactors[index][0] + ', ' + 'AGF ' +
-                          selectedFactors[index][1]]);
-              }
-              return arr;
-            })(),
             data: (function() {
-              var plot_data = [];
-              for(var i=0; i < noiseLevels.length; i++) {
+              var plotData = [];
+              for(var i=0; i < selectedFactors.length; i++) {
                 var datum = {
-                  x: noiseLevels[i],
-                  y: function() {
+                  key: selectedFactors[i],
+                  values: function() {
                     var arr = [];
-                    for(var j=0; j < selectedFactors.length; j++) {
-                      arr.push(result[selectedFactors[j][0]]['agf'][selectedFactors[j][1]][noiseLevels[i]]);
+                    var noises = result[selectedFactors[i][0]]['agf'][selectedFactors[i][1]];
+
+                    var noiseLevels = sortNoiseObject(noises);
+                    for (var noise in noiseLevels) {
+                      arr.push([noise, result[selectedFactors[i][0]]['agf'][selectedFactors[i][1]][noise]]);
                     }
                     return arr;
                   }()
-                }
-                plot_data.push(datum);
+                };
+                plotData.push(datum);
               }
-              // console.log(plot_data);
-              return plot_data;
+              var finalPlotData = plotData.sort(plotDataCompare)
+              return finalPlotData;
             })()
           };
         }

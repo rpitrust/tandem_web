@@ -1,100 +1,87 @@
 <!doctype html>
-<!--[if lt IE 9]> <html class="no-js lt-ie9" lang="en" ng-app="TandemWeb"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" ng-app="TandemWeb"> <!--<![endif]-->
-<head>
+<html class="no-js" ng-app="TandemWeb">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/nvd3/src/nv.d3.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/custom.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-controller="AppCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>TandemWeb - Yet another amazing AngularJS app</title>
-  <meta name="description" content="Yet another amazing AngularJS app">
+    <!-- Add your site or application content here -->
+    <div class="container" ng-controller="HeaderCtrl">
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <!-- <li class="active"><a ng-href="#">Home</a></li> -->
+          <li ng-class="{ active: isActive('/chart')}"><a ng-href="#/chart">Noise vs X</a></li>
+          <li ng-if="loggedIn === false" ng-class="{ active: isActive('/login')}"><a ng-href="#/login">Login</a></li>
+          <li ng-if="loggedIn == true"><a ng-href="#/logout">Logout</a></li>
+        </ul>
+        <h3 class="text-muted">tandemWeb</h3>
+      </div>
 
-<!--[if lt IE 9]>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script>
-<![endif]-->
+      <div ng-view=""></div>
 
-  <!-- Sets initial viewport load and disables zooming  -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Set a shorter title for iOS6 devices when saved to home screen -->
-  <meta name="apple-mobile-web-app-title" content="TandemWeb">
-
-  <!-- Properties for Google+ snippets -->
-  <meta property="og:title" content="TandemWeb">
-  <meta property="og:description" content="Yet another amazing AngularJS app">
-  <meta property="og:image" content="https://github.global.ssl.fastly.net/images/modules/logos_page/Octocat.png">
-
-  <!-- Author of this application -->
-  <link rel="author" href="https://github.com/mgcrea">
-  <link rel="icon" href="http://angularjs.org/favicon.ico" type="image/x-icon">
-  <link rel="shortcut icon" href="http://angularjs.org/favicon.ico" type="image/x-icon">
-
-  <!-- build:css styles/components.min.css -->
-  <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-  <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.min.css" />
-  <!-- endbower -->
-  <!-- endbuild -->
-
-  <!-- build:css(.tmp) styles/main.min.css -->
-  <link rel="stylesheet" href="styles/main.css">
-  <!-- endbuild -->
-
-</head>
-
-<body ontouchstart ng-controller="AppCtrl">
-
-  <div class="site-wrapper">
-    <div class="site-wrapper-inner">
-      <div class="cover-container">
-        <div class="masthead clearfix">
-          <!-- <div class="inner" ng-include="'views/partials/header.html'"></div> -->
-        </div>
-        <div class="inner cover">
-          <div class="inner" ng-view></div>
-        </div>
-        <div class="mastfoot">
-          <div class="inner" ng-include="'views/partials/footer.html'"></div>
-        </div>
+      <div class="footer">
+        <!-- <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p> -->
       </div>
     </div>
-  </div>
 
-  <!-- build:js scripts/components.min.js -->
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
-  <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.js"></script>
-  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
-  <script src="bower_components/angular-django-rest-resource/angular-django-rest-resource.js"></script>
-  <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-  <script src="bower_components/restangular/dist/restangular.js"></script>
-  <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
-  <script src="bower_components/d3/d3.js"></script>
-  <script src="bower_components/angular-charts/dist/angular-charts.js"></script>
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/nvd3/nv.d3.js"></script>
+    <script src="bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <script src="bower_components/angular-ui-select/dist/select.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
   <script src="bower_components/checklist-model/checklist-model.js"></script>
-  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <!-- endbower -->
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
-  <!-- endbuild -->
-
-  <!-- build:js scripts/app.min.js -->
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
+  <script src="scripts/utils.js"></script>
   <script src="scripts/controllers/app.js"></script>
   <script src="scripts/services/http_auth_interceptor.js"></script>
   <script src="scripts/services/endpoints.js"></script>
   <script src="scripts/services/line_charts.js"></script>
+  <script src="scripts/controllers/header.js"></script>
   <script src="scripts/controllers/login.js"></script>
   <script src="scripts/controllers/logout.js"></script>
   <script src="scripts/controllers/user.js"></script>
   <script src="scripts/controllers/noise_sa.js"></script>
-  <!-- endbuild -->
-
+        <!-- endbuild -->
 </body>
-
 </html>
