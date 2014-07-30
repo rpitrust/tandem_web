@@ -1,0 +1,93 @@
+<div class="row">
+  <div ng-model="factorTabs.activeTab" bs-tabs="factorTabs"></div>
+
+  <tabset>
+    <tab ng-repeat="tab in factorTabs" heading="{{tab.title}}" active="tab.active" ng-click="updateActiveTab(tab.id)">
+    </tab>
+  </tabset>
+</div>
+<div class="row">
+  <div class="col-md-2">
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="row">
+      <div class="row">
+        <label><b>Trust Used:</b>&nbsp;&nbsp;</label>
+        <div class="btn-group">
+          <label class="btn btn-success" ng-model="trustOptions.true" btn-checkbox>True</label>
+          <label class="btn btn-danger" ng-model="trustOptions.false" btn-checkbox>False</label>
+        </div>
+      </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+      <div class="row">
+        <label><b>AGF:</b>&nbsp;&nbsp;</label>
+        <div class="btn-group">
+          <label class="btn btn-primary btn" ng-model="agfOptions.1" btn-checkbox>1</label>
+          <label class="btn btn-primary btn" ng-model="agfOptions.3" btn-checkbox>3</label>
+        </div>
+    </div>
+    </div>
+
+    <br/>
+    <br/>
+
+    <div class="row">
+      <label ng-if="agfSelected" class="sidebar-list" ng-repeat="factor in factors" ng-click="updateChart($event, factor)" ng-style="getSelectedClass(factor)">
+        <input type="checkbox" checklist-model="currentFactors" checklist-value="factor"> {{factorTabs[factorTabs.activeTab].title}} {{factor[0]}} | AGF {{factor[1]}}
+      </label>
+    </div>
+  </div>
+
+
+  <div class="col-md-10">
+    <div class="row axisSelect">
+      <div class="x-axis-default">
+        <div style="float:right;"><big>Noise </big> vs </div>
+      </div>
+      <div class="y-axis-select">
+        <ui-select ng-model="yAxis.selected" theme="bootstrap" ng-disabled="disabled">
+
+        <ui-select-match placeholder="Select Y-axis">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="yAxis in yAxisOptions">
+          <div ng-bind-html="yAxis.name"></div>
+        </ui-select-choices>
+      </ui-select>
+
+      </div>
+    </div>
+    <div class="row">
+      <nvd3-cumulative-line-chart
+              data="data"
+              id="exampleId"
+              width="900"
+              height="500"
+              showXAxis="true"
+              showYAxis="true"
+              tooltips="true"
+              interactive="true"
+              color="colorFunction()"
+              legendColor="colorFunction()"
+              forcey=""
+              showLegend="false"
+              margin="{left:100,top:50,bottom:50,right:50}"
+              useInteractiveGuideLine="true"
+              xAxisTickValues="[50, 500, 5000]"
+              yaxistickformat="yTickFormatFunction()"
+              transitionduration="500"
+              nodata="Please select AGF/datapoint to start plotting"
+              xAxisLabel="Noise"
+              yAxisLabel="{{yAxis.selected.name}}"
+              >
+          <svg></svg>
+      </nvd3-cumulative-line-chart>
+    </div>
+  </div>
+
+</div>

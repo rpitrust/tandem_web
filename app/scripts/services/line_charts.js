@@ -12,13 +12,14 @@ angular.module('TandemWeb')
             if(event.target.checked === true ) {
               // if the factor isn't already present in the array of
               // current factors, add it
+              var present;
               for (var index in currentFactors) {
                 if (_.isEqual(factor, currentFactors[index])) {
-                  var present = true;
+                  present = true;
                   break;
                 }
               }
-              if(present == undefined) {
+              if(present === undefined) {
                 currentFactors.push(factor);
               }
               selectedFactors = angular.copy(currentFactors);
@@ -47,7 +48,7 @@ angular.module('TandemWeb')
               for(var i=0; i < selectedFactors.length; i++) {
                 var datum = {
                   key: selectedFactors[i],
-                  values: function() {
+                  values: (function() {
                     var arr = [];
                     var noises = result[selectedFactors[i][0]]['agf'][selectedFactors[i][1]];
 
@@ -56,11 +57,11 @@ angular.module('TandemWeb')
                       arr.push([noise, result[selectedFactors[i][0]]['agf'][selectedFactors[i][1]][noise]]);
                     }
                     return arr;
-                  }()
+                  })()
                 };
                 plotData.push(datum);
               }
-              var finalPlotData = plotData.sort(plotDataCompare)
+              var finalPlotData = plotData.sort(plotDataCompare);
               return finalPlotData;
             })()
           };
