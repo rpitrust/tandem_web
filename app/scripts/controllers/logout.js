@@ -5,6 +5,6 @@ angular.module('TandemWeb')
     function($scope, $location, $window) {
       delete $window.sessionStorage.token;
       $scope.$parent.loggedIn = false;
-      $location.path('/');
+      $location.path('/chart');
     }
   ]);
